@@ -11,14 +11,14 @@ def main():
     st.title('Credit Scoring Prediction App')
     st.write('Enter the feature values and click the "Predict" button to get credit scoring prediction.')
 
-    # Define the feature names based on the new coefficients
-    feature_names = ['loan_amnt', 'int_rate', 'annual_inc', 'dti', 'total_acc', 'initial_list_status', 'last_pymnt_amnt', 'pymnt_time']
+    # Define the feature names and default values
+    feature_names = ['Loan Amount (USD)', 'Interest Rate (%)', 'Annual Income (USD)']
+    default_values = [1000, 10, 50000]
 
     # Input fields for the features required for prediction
     feature_values = {}
-    for feature_name in feature_names:
-        default_value = 100.0 if 'loan_amnt' in feature_name else 10.0 if 'int_rate' in feature_name else 50000.0
-        feature_values[feature_name] = st.number_input(feature_name, value=default_value, step=0.01)
+    for feature_name, default_value in zip(feature_names, default_values):
+        feature_values[feature_name] = st.number_input(feature_name, value=default_value, step=1)
 
     # Prepare the input data as a DataFrame with the same column names as in the training data
     input_data = pd.DataFrame(feature_values, index=[0])
