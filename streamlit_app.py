@@ -8,8 +8,8 @@ with open('logistic_regression.pkl', 'rb') as file:
 
 # Streamlit app code
 def main():
-    st.title('Credit Scoring Prediction App')
-    st.write('Enter the feature values and click the "Predict" button to get credit scoring prediction.')
+    st.title('Loan Default Prediction')
+    st.write('deployed by Lana Fuadi.')
 
     # Define the original feature names and default values
     feature_names = [
