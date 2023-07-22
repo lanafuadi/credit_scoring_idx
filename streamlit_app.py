@@ -1,55 +1,38 @@
 import streamlit as st
-import numpy as np
 import pickle
+import pandas as pd
 
-# Load the trained model
+# Load the trained logistic regression model
 with open('logreg_model.pkl', 'rb') as file:
     model = pickle.load(file)
 
-# Define the logistic regression coefficients
-coefficients = {
-    "annual_inc": -0.3891,
-    "loan_amnt": -1.5778,
-    "int_rate": -1.7471,
-    "const": 1.9908,
-}
-
-# Helper function to calculate the odds based on coefficients
-def calculate_odds(inputs):
-    odds = np.exp(np.dot(inputs, np.array(list(coefficients.values()))))
-    return odds
-
-# Helper function to calculate the probability of being in a positive class
-def calculate_probability(inputs):
-    odds = calculate_odds(inputs)
-    probability = odds / (1 + odds)
-    return probability
-
-# Create the Streamlit app
+# Streamlit app code
 def main():
-    st.title("Logistic Regression Model Deployment")
+    st.title('Credit Scoring Prediction App')
+    st.write('Enter the feature values and click the "Predict" button to get credit scoring prediction.')
 
-    # Collect user inputs for the features
-    st.header("Enter Feature Values")
-    annual_income = st.number_input("Annual Income", value=50000)
-    loan_amount = st.number_input("Loan Amount", value=10000)
-    interest_rate = st.number_input("Interest Rate (%)", value=10.0)
+    # Define the feature names based on the coefficients in the model
+    feature_names = ['loan_amnt_', 'int_rate_', 'annual_inc_']
 
-    # Prepare the feature values for prediction
-    input_values = np.array([annual_income, loan_amount, interest_rate, 1])
+    # Input fields for the features required for prediction
+    feature_values = {}
+    for feature_name in feature_names:
+        default_value = 100.0 if 'loan_amnt_' in feature_name else 10.0 if 'int_rate_' in feature_name else 50000.0
+        feature_values[feature_name] = st.number_input(feature_name, value=default_value, step=1.0)
 
-    # Calculate the probability of being in a positive class
-    probability = calculate_probability(input_values)
+    # Prepare the input data as a DataFrame with the same column names as in the training data
+    input_data = pd.DataFrame(feature_values, index=[0])
 
-    st.subheader("Model Prediction")
-    st.write(f"The predicted probability of being in a positive class is: {probability:.2f}")
+    # Make predictions when the user clicks the "Predict" button
+    if st.button('Predict'):
+        # Perform any necessary preprocessing on the input data (e.g., scaling, encoding)
+        # Make predictions using the loaded model
+        prediction = model.predict(input_data)
+        proba = model.predict_proba(input_data)[:, 1]
 
-    st.subheader("Model Information")
-    st.write("The model was trained using a logistic regression algorithm.")
-    st.write("It predicts the probability of a binary outcome (positive or negative class).")
-    st.write("The model uses features: Annual Income, Loan Amount, and Interest Rate.")
-    st.write("The odds ratio shows the odds of a positive outcome for each unit increase in the feature.")
-    st.write("An odds ratio greater than 1 indicates a positive effect, while less than 1 indicates a negative effect.")
+        # Display the prediction and probability
+        st.write(f'Prediction: {"Good" if prediction[0] == 0 else "Bad"}')
+        st.write(f'Probability of Default: {proba[0]:.4f}')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
