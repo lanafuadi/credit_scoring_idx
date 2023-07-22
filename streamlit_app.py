@@ -12,13 +12,11 @@ def main():
     st.write('Enter the feature values and click the "Predict" button to get credit scoring prediction.')
 
     # Input fields for the features required for prediction
-    last_pymnt_amnt = st.number_input('Last Payment Amount', value=0.0, step=1.0)
     loan_amnt = st.number_input('Loan Amount', value=100.0, step=1.0)
     int_rate = st.number_input('Interest Rate', value=10.0, step=0.01)
 
     # Prepare the input data as a DataFrame with the same column names as in the training data
     input_data = pd.DataFrame({
-        'last_pymnt_amnt': [last_pymnt_amnt],
         'loan_amnt': [loan_amnt],
         'int_rate': [int_rate]
         # Add more columns for other features as needed
