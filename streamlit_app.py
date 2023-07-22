@@ -3,7 +3,7 @@ import pickle
 import pandas as pd
 
 # Load the trained logistic regression model
-with open('logreg_model.pkl', 'rb') as file:
+with open('logistic_regression.pkl', 'rb') as file:
     model = pickle.load(file)
 
 # Streamlit app code
@@ -12,12 +12,12 @@ def main():
     st.write('Enter the feature values and click the "Predict" button to get credit scoring prediction.')
 
     # Define the feature names based on the coefficients in the model
-    feature_names = ['loan_amnt_', 'int_rate_', 'annual_inc_']
+    feature_names = ['loan_amnt', 'int_rate', 'annual_inc']
 
     # Input fields for the features required for prediction
     feature_values = {}
     for feature_name in feature_names:
-        default_value = 100.0 if 'loan_amnt_' in feature_name else 10.0 if 'int_rate_' in feature_name else 50000.0
+        default_value = 100.0 if 'loan_amnt' in feature_name else 10.0 if 'int_rate' in feature_name else 50000.0
         feature_values[feature_name] = st.number_input(feature_name, value=default_value, step=1.0)
 
     # Prepare the input data as a DataFrame with the same column names as in the training data
